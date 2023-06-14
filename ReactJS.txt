@@ -109,7 +109,7 @@ function Counter() {
 In the example above, the `Counter` component uses `useState` to create a state variable `count` and its corresponding update function `setCount`. Clicking the "Increment" button triggers the `increment` function, which calls `setCount` to update the state value of `count`. As a result, the component re-renders, displaying the updated count value.
 
 /////////////////////////////////////////////////////////////////
-
+What are keys in React...
 In React, "keys" are special attributes that you need to include when rendering lists of elements. The key attribute helps React identify each item in the list uniquely and efficiently update the components when the list changes.
 
 When you render an array of elements in React, you should assign a unique key to each item in the array. The key should be a string or a number that uniquely identifies the item. React uses these keys to keep track of which items have changed, been added, or been removed.
@@ -288,6 +288,167 @@ React's reconciliation algorithm and efficient diffing process help make the Vir
 Overall, the Virtual DOM is a key feature of React that helps provide a declarative and efficient way to build UI components and manage updates. It abstracts away the complexity of directly manipulating the browser DOM and allows for better performance and a smoother user experience.
 
 /////////////////////////////////////////////////////////////////
+Difference between controlled and uncontrolled components.
+In the context of software development, the terms "controlled components" and "uncontrolled components" are commonly used in relation to user interface elements, particularly in frameworks like React.
 
+Controlled Components:
+A controlled component is a user interface element whose value is controlled by the application's state. The state is typically managed by the parent component, and the value of the controlled component is passed down as a prop. When the user interacts with a controlled component (e.g., input field or checkbox), it triggers an event handler that updates the state in the parent component. The updated state is then passed back down to the controlled component, reflecting the new value.
+
+Benefits of controlled components:
+1. Application state is the single source of truth: Since the value of a controlled component is derived from the application state, it ensures that the UI and the state are always in sync.
+2. Enables validation and additional logic: The application has full control over the data being entered or modified in the controlled component, allowing for validation, formatting, or performing additional logic before updating the state.
+3. Facilitates sharing state between components: Controlled components make it easier to share state across multiple components as the state is managed by a common parent.
+
+Example: 
+function FormValidation(props) {
+let [inputValue, setInputValue] = useState("");
+let updateInput = e => {
+  setInputValue(e.target.value);
+};
+return (
+  <div>
+    <form>
+      <input type="text" value={inputValue} onChange={updateInput} />
+    </form>
+  </div>
+);
+}
+
+Uncontrolled Components:
+An uncontrolled component is a user interface element that manages its state internally, without being controlled by the application's state. The value of an uncontrolled component is typically accessed through the DOM using references or other mechanisms after user interaction.
+
+Benefits of uncontrolled components:
+1. Simplicity and less code: Uncontrolled components require less code, as the application doesn't need to handle state management or event handling explicitly.
+2. Quick prototyping: Uncontrolled components can be useful for quick prototyping or when the application doesn't require fine-grained control over the user input.
+3. Legacy integration: When working with legacy code or integrating with third-party libraries that don't support controlled components, uncontrolled components can be a suitable approach.
+
+In summary, controlled components provide more control and synchronization between the UI and the application state, while uncontrolled components offer simplicity and can be useful in certain scenarios where fine-grained control is not necessary or when working with existing codebases. The choice between controlled and uncontrolled components depends on the specific requirements and complexity of the application.
+
+Example: 
+function FormValidation(props) {
+let inputValue = React.createRef();
+let handleSubmit = e => {
+  alert(`Input value: ${inputValue.current.value}`);
+  e.preventDefault();
+};
+return (
+  <div>
+    <form onSubmit={handleSubmit}>
+      <input type="text" ref={inputValue} />
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+);
+}
 /////////////////////////////////////////////////////////////////
-New
+React Props.. 
+In React, props (short for "properties") are a way to pass data from a parent component to a child component. Props are a fundamental concept in React and play a crucial role in building reusable and composable components.
+
+When a component is used in JSX (JavaScript XML), you can provide attributes to that component. These attributes are known as props. Props can be any JavaScript value, including strings, numbers, objects, or even functions.
+
+Here's an example of a parent component passing props to a child component:
+
+```jsx
+// ParentComponent.jsx
+import React from 'react';
+import ChildComponent from './ChildComponent';
+
+const ParentComponent = () => {
+  const name = 'John Doe';
+  const age = 30;
+
+  return (
+    <div>
+      <ChildComponent name={name} age={age} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+```
+
+In the above example, the `ParentComponent` is passing two props, `name` and `age`, to the `ChildComponent`. The props are specified as attributes (`name={name}` and `age={age}`) within the JSX syntax.
+
+The child component, `ChildComponent`, can receive these props and use them as needed:
+
+```jsx
+// ChildComponent.jsx
+import React from 'react';
+
+const ChildComponent = (props) => {
+  return (
+    <div>
+      <h2>Name: {props.name}</h2>
+      <h2>Age: {props.age}</h2>
+    </div>
+  );
+};
+
+export default ChildComponent;
+```
+
+In the `ChildComponent`, the props are accessed as properties of the `props` object. In this case, `props.name` and `props.age` are used to display the values passed from the parent component.
+
+Props are read-only, meaning that the child component should not modify its props directly. They are intended to be used for passing data down the component tree and triggering behavior based on that data.
+
+By leveraging props, you can create reusable components that can be easily customized and composed within your React applications.
+/////////////////////////////////////////////////////////////////
+Difference between props and state in react. 
+In React, both props and state are used to manage data in components, but they serve different purposes.
+
+Props (short for "properties") are used to pass data from a parent component to its child components. They are immutable and are passed down from the parent component, meaning that child components cannot modify the props they receive. Props are useful for creating reusable components that can be configured with different data based on their usage.
+
+State, on the other hand, is used to manage internal component data that can change over time. Unlike props, state is mutable and can be updated within the component itself. State allows components to keep track of information that may change due to user interactions, server responses, or any other event. When the state is updated, React re-renders the component to reflect the new state.
+
+Here's a summary of the differences between props and state:
+
+1. **Source of Data:** Props are passed from parent components to child components, whereas state is managed within the component itself.
+
+2. **Mutability:** Props are immutable and cannot be modified by the child components that receive them. State, on the other hand, is mutable and can be updated using the `setState` method.
+
+3. **Ownership:** Props are owned and managed by the parent component that passes them. State is owned and managed by the component itself.
+
+4. **Data Flow:** Props flow downwards from parent to child components, forming a unidirectional data flow. Changes in props at the parent level can trigger re-rendering of child components. State is local to the component and can be updated independently.
+
+5. **Changes:** Props are usually stable and do not change frequently. State is used to hold data that is expected to change over time.
+
+In general, it's recommended to use props for passing data that doesn't change within the component and use state for managing data that can change and affect the component's rendering or behavior. By carefully managing props and state, you can create dynamic and interactive React components.
+/////////////////////////////////////////////////////////////////
+What are side effects in React... 
+In React, side effects refer to any additional operations or effects that occur outside the regular component rendering process. These effects can include tasks such as data fetching, subscriptions, modifying the DOM, or interacting with external APIs.
+
+Since React components are primarily focused on rendering UI based on their props and state, side effects are handled using the `useEffect` hook. The `useEffect` hook is a built-in React hook that allows you to perform side effects in functional components.
+
+Here's an example that demonstrates the usage of `useEffect`:
+
+```jsx
+import React, { useEffect } from 'react';
+
+const MyComponent = () => {
+  useEffect(() => {
+    // Perform the side effect here
+    console.log('Component mounted');
+    
+    return () => {
+      // Clean up the side effect here (optional)
+      console.log('Component unmounted');
+    };
+  }, []); // Empty dependency array means the effect runs only once on component mount
+
+  return <div>My Component</div>;
+};
+
+export default MyComponent;
+```
+
+In the above example, the `useEffect` hook is used to define a side effect within the functional component `MyComponent`. The effect is triggered when the component mounts (i.e., renders for the first time), and the side effect code within the effect's callback function is executed. In this case, it logs a message to the console.
+
+The `useEffect` hook also allows you to specify dependencies, which are used to control when the effect should run. By providing an empty dependency array (`[]`), as shown in the example, the effect runs only once when the component mounts. If you provide variables in the dependency array, the effect will run whenever any of those variables change.
+
+Additionally, the `useEffect` hook can return a cleanup function, which is executed when the component unmounts or before the next effect runs. This is useful for performing cleanup operations or canceling any ongoing asynchronous tasks to avoid memory leaks.
+
+By using the `useEffect` hook, you can incorporate side effects into your React components in a declarative and controlled manner, ensuring proper handling of tasks that fall outside the component's rendering process.
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
